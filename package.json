@@ -1,0 +1,36 @@
+{
+  "name": "debugging-practice",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/shared",
+    "packages/server",
+    "packages/web"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,web -c cyan,magenta \"npm run dev -w @dp/server\" \"npm run dev -w @dp/web\"",
+    "dev:server": "npm run dev -w @dp/server",
+    "dev:web": "npm run dev -w @dp/web",
+    "build": "npm run build -w @dp/web",
+    "seed": "tsx packages/server/src/db/seed.ts",
+    "reset": "node -e \"require('fs').rmSync('packages/server/data',{recursive:true,force:true})\" && npm run seed",
+    "simulate": "tsx tools/simulate.ts",
+    "logs": "tail -f logs/app.log | pino-pretty -t 'SYS:HH:MM:ss.l'",
+    "hint": "bash tools/hint.sh",
+    "solutions": "bash tools/solutions.sh",
+    "test": "vitest run --root packages/server",
+    "typecheck": "tsc -p packages/shared --noEmit && tsc -p packages/server --noEmit && tsc -p packages/web --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "concurrently": "^9.1.2",
+    "pino-pretty": "^13.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
